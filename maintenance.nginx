@@ -44,24 +44,26 @@ gzip_types text/css text/javascript text/xml text/plain application/javascript a
 output_buffers 10 128k;
 postpone_output 1500;
 
-server { 
- listen 80; 
- server_name maintenance; 
- root /var/www/html; 
- index index.html index.htm; 
+server {
+ listen 80;
+ server_name maintenance;
+ root /var/www/html;
+ index index.html index.htm;
 
- #charset koi8-r; 
- #access_log /var/log/nginx/log/host.access.log main; 
+ #charset koi8-r;
+ #access_log /var/log/nginx/log/host.access.log main;
 
- #error_page 404 /404.html; 
+ #error_page 404 /404.html;
+ location / {
+    try_files $uri /index.html;
+ }
+ ## Redirect server error pages to the static page /50x.html
+ error_page 500 502 503 504 /50x.html;
+ location = /50x.html {
+  root /usr/share/nginx/html;
+ }
 
- ## Redirect server error pages to the static page /50x.html 
- error_page 500 502 503 504 /50x.html; 
- location = /50x.html { 
-  root /usr/share/nginx/html; 
- } 
-
- ## Proxy the PHP scripts to Apache listening on 127.0.0.1:80 
+ ## Proxy the PHP scripts to Apache listening on 127.0.0.1:80
  #location ~ \.php$ {
  # proxy_pass http://127.0.0.1;
  #}
@@ -70,7 +72,7 @@ server {
  location ~ /\. {
   deny all;
  }
- 
+
  ## No log for known files
  location ~* ^.+\.(js|css|swf|xml|ogg|ogv|svg|svgz|eot|otf|woff|mp4|ttf|rss|atom|jpg|jpeg|gif|png|ico|mid|midi|wav|bmp)$ {
   access_log off; log_not_found off; expires 30d;
